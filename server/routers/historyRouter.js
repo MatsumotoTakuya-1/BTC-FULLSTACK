@@ -7,4 +7,10 @@ router.get("/history", async (req, res) => {
   res.json(results);
 });
 
+router.delete("/history/:id", async (req, res) => {
+  const { id } = req.params;
+  await db("histories").where({ id }).del();
+  res.sendStatus(204);
+});
+
 module.exports = router;

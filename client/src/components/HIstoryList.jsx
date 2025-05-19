@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchHistory } from "../API/stockAPI";
+import { fetchHistory, deleteHistory } from "../API/stockAPI";
 
 function HistoryList(props) {
   const [history, setHistory] = useState();
@@ -9,23 +9,22 @@ function HistoryList(props) {
   const loadHistory = async () => {
     try {
       const data = await fetchHistory();
-      console.log("🚀 ~ loadHistory ~ data:", data);
       setHistory(data);
     } catch (err) {
       console.error("履歴の取得に失敗しました", err);
     }
   };
 
-  //   // ✅ 履歴を削除する処理
-  //   const handleDelete = async (id) => {
-  //     try {
-  //       await deleteHistory(id);
-  //       setHistory(history.filter((h) => h.id !== id));
-  //     } catch (err) {
-  //       console.error("削除エラー:", err);
-  //       alert("削除に失敗しました");
-  //     }
-  //   };
+  //  履歴を削除する処理
+  const handleDelete = async (id) => {
+    try {
+      await deleteHistory(id);
+      setHistory(history.filter((h) => h.id !== id));
+    } catch (err) {
+      console.error("削除エラー:", err);
+      alert("削除に失敗しました");
+    }
+  };
 
   //   初回に履歴取得
   useEffect(() => {
@@ -44,21 +43,15 @@ function HistoryList(props) {
           </tr>
         </thead>
         <tbody>
-          {history.map((item) => {
-            <tr
-              key={item.id}
-              //   style={{
-              //     backgroundColor:
-              //       item.id === selectedId ? "#e0f0ff" : "transparent",
-              //   }}
-            >
+          {history.map((item) => (
+            <tr key={item.id}>
               <td>{item.symbol}</td>
-              <td>{1}</td>
+              <td>{new Date(item.created_at).toLocaleString()}</td>
               <td>
-                <button>🗑</button>
+                <button onClick={() => handleDelete(item.id)}>🗑</button>
               </td>
-            </tr>;
-          })}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
