@@ -1,0 +1,8 @@
+import axios from "axios";
+
+export const fetchStockPrediction = async (symbol, range, model) => {
+  const res = await axios.post("/api/predict", { symbol, range, model });
+  console.log(res.data);
+
+  return res.data;
+};
