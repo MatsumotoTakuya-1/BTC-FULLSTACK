@@ -1,6 +1,7 @@
 import "./App.css";
 import StockForm from "./components/StockForm";
 import StockChart from "./components/StockChart";
+import HistoryList from "./components/HIstoryList";
 import { useEffect, useState } from "react";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
 
       <StockForm searchResult={searchResult} />
       {stockData && <StockChart data={stockData} />}
+      <HistoryList />
     </div>
   );
 }

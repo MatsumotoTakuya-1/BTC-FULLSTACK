@@ -6,3 +6,8 @@ export const fetchStockPrediction = async (symbol, range, model) => {
 
   return res.data;
 };
+
+export const fetchHistory = async () => {
+  const res = await axios.get("/api/history");
+  return res.data;
+};
