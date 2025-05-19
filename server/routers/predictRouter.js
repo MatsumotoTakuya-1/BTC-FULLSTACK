@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
+const db = require("../db");
 const yahooFinance = require("yahoo-finance2").default;
 
 router.post("/predict", async (req, res) => {
@@ -108,6 +109,16 @@ router.post("/predict", async (req, res) => {
     //   ...
     // }
     // ---------------------------------------
+
+    await db("histories").insert({
+      symbol,
+      actual,
+      actualDates,
+      predicted,
+      predictedDates,
+      company,
+      created_at: new Date(),
+    });
 
     res.json({
       symbol,

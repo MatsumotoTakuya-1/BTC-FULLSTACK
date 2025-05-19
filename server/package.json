@@ -8,7 +8,7 @@
     "build": "cd ../client && npm install && npm run build && rm -rf ../server/public && mkdir -p ../server/public && cp -r dist/* ../server/public/",
     "migrate-latest": "knex migrate:latest",
     "migrate-make": "knex migrate:make",
-    "db:rollback": "knex migrate:rollback --all"
+    "migrate-rollback": "knex migrate:rollback --all"
   },
   "keywords": [],
   "author": "",

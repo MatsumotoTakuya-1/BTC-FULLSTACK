@@ -23,6 +23,7 @@ function StockForm(props) {
   };
 
   const submitClick = async (e) => {
+    e.preventDefault(); //フォーム送信後のページリロード止める。
     if (!symbol) {
       alert("銘柄を入力してください");
       return;

@@ -6,10 +6,10 @@ exports.up = function (knex) {
   return knex.schema.createTable("histories", function (table) {
     table.increments("id").primary();
     table.string("symbol").notNullable();
-    table.decimal("actual", 32, 2);
-    table.date("actualDates");
-    table.decimal("predicted", 32, 2);
-    table.date("predictedDates");
+    table.specificType("actual", "double precision[]");
+    table.specificType("actualDates", "text[]");
+    table.specificType("predicted", "double precision[]");
+    table.specificType("predictedDates", "text[]");
     table.jsonb("company");
     table.timestamp("created_at").defaultTo(knex.fn.now());
   });
