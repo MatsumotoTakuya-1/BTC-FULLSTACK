@@ -10,13 +10,18 @@ function App() {
   const searchResult = (data) => {
     setStockData(data);
   };
+
+  //履歴のアイテムが押された時の処理
+  const historySelect = (data) => {
+    setStockData(data);
+  };
   return (
     <div className="">
       <h1>株価予測アプリ</h1>
 
       <StockForm searchResult={searchResult} />
       {stockData && <StockChart data={stockData} />}
-      <HistoryList />
+      <HistoryList historySelect={historySelect} />
     </div>
   );
 }

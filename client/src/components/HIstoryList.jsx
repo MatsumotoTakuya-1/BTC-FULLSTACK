@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { fetchHistory, deleteHistory } from "../API/stockAPI";
 
 function HistoryList(props) {
-  const [history, setHistory] = useState();
+  const [history, setHistory] = useState([]);
   //   const [selectedId, setSelectedId] = useState(null);
 
   // 履歴データを取得
@@ -45,8 +45,16 @@ function HistoryList(props) {
         <tbody>
           {history.map((item) => (
             <tr key={item.id}>
-              <td>{item.symbol}</td>
-              <td>{new Date(item.created_at).toLocaleString()}</td>
+              <td>
+                <button
+                  onClick={() => {
+                    props.historySelect(item); // グラフへ反映
+                  }}
+                >
+                  {item.symbol}
+                </button>
+              </td>
+              <td>{new Date(item.created_at).toLocaleString("ja-JP")}</td>
               <td>
                 <button onClick={() => handleDelete(item.id)}>🗑</button>
               </td>

@@ -127,7 +127,7 @@ router.post("/predict", async (req, res) => {
       predicted,
       predictedDates,
       company,
-      timestamp: new Date(),
+      created_at: new Date(),
     });
   } catch (err) {
     console.error(err);
