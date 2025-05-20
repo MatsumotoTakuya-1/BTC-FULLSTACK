@@ -4,12 +4,16 @@ const path = require("path");
 const predictRouter = require("./routers/predictRouter");
 const historyRouter = require("./routers/historyRouter");
 const authRouter = require("./routers/authRouter");
+const cookieParser = require("cookie-parser"); //サーバー側でクッキーを扱うミドルウェア
 
 const app = express();
 const PORT = 4000;
 
 app.use(cors());
 app.use(express.json());
+
+// express でcookieを取得
+app.use(cookieParser());
 
 // dist 配信
 app.use(express.static(path.join(__dirname, "./public")));

@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const crypto = require("crypto");
-const { error } = require("console");
-const { route } = require("./predictRouter");
 
 function hashPassword(password, salt) {
   return crypto
@@ -68,9 +66,7 @@ router.post("/login", async (req, res) => {
 //ログアウト処理
 router.post("/logout", async (req, res) => {
   try {
-    console.log("🚀 ~ router.post ~ req.cookies:", req.cookie);
     const sessionId = req.cookies.sessionId;
-    console.log("🚀 ~ router.post ~ sessionId:", sessionId);
     await db("sessions").where("session_id", sessionId).del();
 
     res.clearCookie("sessionId");
