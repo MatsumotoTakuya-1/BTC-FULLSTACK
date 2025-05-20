@@ -9,7 +9,7 @@
     "migrate-latest": "knex migrate:latest",
     "migrate-make": "knex migrate:make",
     "migrate-rollback": "knex migrate:rollback --all",
-    "test": "mocha --require test/setup.js"
+    "test": "mocha test/**/*.test.js"
   },
   "keywords": [],
   "author": "",
