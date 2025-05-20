@@ -39,6 +39,8 @@ function HistoryList(props) {
           <tr>
             <th>銘柄</th>
             <th>検索日時</th>
+            <th>表示期間</th>
+            <th>モデル</th>
             <th>削除</th>
           </tr>
         </thead>
@@ -55,6 +57,8 @@ function HistoryList(props) {
                 </button>
               </td>
               <td>{new Date(item.created_at).toLocaleString("ja-JP")}</td>
+              <td>{item.range}</td>
+              <td>{item.model}</td>
               <td>
                 <button onClick={() => handleDelete(item.id)}>🗑</button>
               </td>

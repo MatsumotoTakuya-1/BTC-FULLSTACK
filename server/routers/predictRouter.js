@@ -117,6 +117,8 @@ router.post("/predict", async (req, res) => {
       predicted,
       predictedDates,
       company,
+      range,
+      model,
       created_at: new Date(),
     });
 
@@ -127,6 +129,8 @@ router.post("/predict", async (req, res) => {
       predicted,
       predictedDates,
       company,
+      range,
+      model,
       created_at: new Date(),
     });
   } catch (err) {
