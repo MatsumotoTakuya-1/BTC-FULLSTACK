@@ -32,10 +32,11 @@ function HistoryList(props) {
   // );
 
   const toggleSymbol = (symbol) => {
-    console.log(expandSymbols);
-    expandSymbols[symbol] = false;
-    expandSymbols[symbol] = !expandSymbols[symbol];
-    setExpandSymbols({ symbol: expandSymbols[symbol] });
+    // console.log(expandSymbols[symbol]);
+    const current = expandSymbols[symbol] || false;
+    const update = { ...expandSymbols };
+    update[symbol] = !current;
+    setExpandSymbols(update);
   };
 
   //  履歴を削除する処理
@@ -62,7 +63,7 @@ function HistoryList(props) {
           <div key={symbol}>
             {/* トグルの設置 */}
             <div>
-              <button onClick={toggleSymbol}>{symbol}</button>
+              <button onClick={() => toggleSymbol(symbol)}>{symbol}</button>
             </div>
             {expandSymbols[symbol] && (
               <table>
