@@ -8,7 +8,8 @@
     "build": "cd ../client && npm install && npm run build && rm -rf ../server/public && mkdir -p ../server/public && cp -r dist/* ../server/public/",
     "migrate-latest": "knex migrate:latest",
     "migrate-make": "knex migrate:make",
-    "migrate-rollback": "knex migrate:rollback --all"
+    "migrate-rollback": "knex migrate:rollback --all",
+    "test": "mocha --require test/setup.js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,9 @@
     "yahoo-finance2": "^2.13.3"
   },
   "devDependencies": {
+    "chai": "^5.2.0",
+    "chai-http": "^5.1.2",
+    "mocha": "^11.4.0",
     "nodemon": "^3.1.10"
   },
   "description": ""
