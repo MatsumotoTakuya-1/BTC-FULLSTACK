@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [stockData, setStockData] = useState(null);
+  const [redrawData, setRedrawData] = useState(0); //検索時の再描画用
 
   const searchResult = (data) => {
     setStockData(data);
+    setRedrawData((prev) => prev + 1); //検索のたび更新
+    console.log(redrawData);
   };
 
   //履歴のアイテムが押された時の処理
@@ -23,7 +26,8 @@ function App() {
 
       <StockForm searchResult={searchResult} />
       {stockData && <StockChart data={stockData} />}
-      <HistoryList historySelect={historySelect} />
+      <HistoryList historySelect={historySelect} key={redrawData} />
+      {/* /keyで渡すとkeyの値が変わるとReactコンポーネントが再描画される */}
     </div>
   );
 }

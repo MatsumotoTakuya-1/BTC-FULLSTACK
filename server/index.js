@@ -4,7 +4,7 @@ const path = require("path");
 const predictRouter = require("./routers/predictRouter");
 const historyRouter = require("./routers/historyRouter");
 const authRouter = require("./routers/authRouter");
-const cookieParser = require("cookie-parser"); //サーバー側でクッキーを扱うミドルウェア
+const cookieParser = require("cookie-parser"); //サーバー側でクッキーを扱うミドルウェア?
 
 const app = express();
 const PORT = 4000;

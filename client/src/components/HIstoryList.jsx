@@ -10,10 +10,27 @@ function HistoryList(props) {
     try {
       const data = await fetchHistory();
       setHistory(data);
+      // console.log("🚀 ~ HistoryList ~ history:", await history);
     } catch (err) {
       console.error("履歴の取得に失敗しました", err);
     }
   };
+
+  //history = [{id,actual,..,range,model,symbol,created_at},{},...]
+  //groupedHistory = {APPL:[item1,item2]} itemはhistoryの１要素
+
+  const groupedHistory = history.reduce((acc, item) => {
+    if (!acc[item.symbol]) {
+      acc[item.symbol] = [];
+    }
+    acc[item.symbol].push(item);
+    return acc;
+  }, {});
+  console.log("🚀 ~ groupedHistory ~ groupedHistory:", groupedHistory);
+  console.log(
+    "🚀 ~ {Object.entries ~ Object.entries(groupedHistory):",
+    Object.entries(groupedHistory)
+  );
 
   //  履歴を削除する処理
   const handleDelete = async (id) => {
@@ -34,38 +51,44 @@ function HistoryList(props) {
   return (
     <div>
       <h2>検索履歴</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>銘柄</th>
-            <th>検索日時</th>
-            <th>表示期間</th>
-            <th>モデル</th>
-            <th>削除</th>
-          </tr>
-        </thead>
-        <tbody>
-          {history.map((item) => (
-            <tr key={item.id}>
-              <td>
-                <button
-                  onClick={() => {
-                    props.historySelect(item); // グラフへ反映
-                  }}
-                >
-                  {item.symbol}
-                </button>
-              </td>
-              <td>{new Date(item.created_at).toLocaleString("ja-JP")}</td>
-              <td>{item.range}</td>
-              <td>{item.model}</td>
-              <td>
-                <button onClick={() => handleDelete(item.id)}>🗑</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {Object.entries(groupedHistory).map(([symbol, item]) => {
+        return (
+          <div key={symbol}>
+            <table>
+              <thead>
+                <tr>
+                  <th>銘柄</th>
+                  <th>検索日時</th>
+                  <th>表示期間</th>
+                  <th>モデル</th>
+                  <th>削除</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map((item) => (
+                  <tr key={item.id}>
+                    <td>
+                      <button
+                        onClick={() => {
+                          props.historySelect(item); // グラフへ反映
+                        }}
+                      >
+                        {item.symbol}
+                      </button>
+                    </td>
+                    <td>{new Date(item.created_at).toLocaleString("ja-JP")}</td>
+                    <td>{item.range}</td>
+                    <td>{item.model}</td>
+                    <td>
+                      <button onClick={() => handleDelete(item.id)}>🗑</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      })}
     </div>
   );
 }

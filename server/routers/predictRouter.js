@@ -110,17 +110,20 @@ router.post("/predict", async (req, res) => {
     // }
     // ---------------------------------------
 
-    await db("histories").insert({
-      symbol,
-      actual,
-      actualDates,
-      predicted,
-      predictedDates,
-      company,
-      range,
-      model,
-      created_at: new Date(),
-    });
+    await db("histories")
+      .insert({
+        symbol,
+        actual,
+        actualDates,
+        predicted,
+        predictedDates,
+        company,
+        range,
+        model,
+        created_at: new Date(),
+      })
+      .onConflict(["symbol", "range", "model"]) //ユニーク制約があり、組み合わせあれば
+      .merge(); //既存なら更新、なければ挿入
 
     res.json({
       symbol,
