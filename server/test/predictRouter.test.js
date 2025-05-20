@@ -9,26 +9,39 @@ const db = require("../db");
 
 describe("predictRouter", () => {
   let request;
+  let trx;
+
   before(async () => {
     request = chai.request(app).keepOpen();
-    await db.migrate
-      .forceFreeMigrationsLock()
-      .then(() => db.migrate.rollback({ all: true }))
-      .then(() => db.migrate.latest())
-      .catch(console.error);
+    // await db.migrate
+    //   .forceFreeMigrationsLock()
+    //   .then(() => db.migrate.rollback({ all: true }))
+    //   .then(() => db.migrate.latest())
+    //   .catch(console.error);
+    trx = await db.transaction();
   });
 
-  after(() => {
+  after(async () => {
+    await trx.rollback();
     request.close();
   });
 
-  describe("fetch yahoo finance", () => {
+  describe("post/api/predict", () => {
     it("should return status 200", async () => {
       const response = await request
         .post("/api/predict")
         .send({ symbol: "AAPL", range: "1w", model: "model1" });
 
       expect(response).to.have.status(200);
+
+      const insert = await trx("histories")
+        .where({
+          symbol: "AAPL",
+          range: "1w",
+          model: "model1",
+        })
+        .first();
+      expect(insert).to.exist;
     });
 
     it("should return stockdata", async () => {
@@ -57,7 +70,7 @@ describe("predictRouter", () => {
         .post("/api/predict")
         .send({ symbol: "TSLA", range: "1w", model: "model1" });
 
-      const findDb = (await db.select().from("histories")).at(-1);
+      const findDb = (await trx.select().from("histories")).at(-1);
       // console.log("🚀 ~ it ~ findDb:", findDb);
       expect(findDb).to.exist;
       expect(findDb.symbol).to.equal("TSLA");
