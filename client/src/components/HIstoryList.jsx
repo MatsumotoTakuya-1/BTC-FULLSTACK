@@ -3,8 +3,7 @@ import { fetchHistory, deleteHistory } from "../API/stockAPI";
 
 function HistoryList(props) {
   const [history, setHistory] = useState([]);
-  //   const [selectedId, setSelectedId] = useState(null);
-
+  const [expandSymbols, setExpandSymbols] = useState({}); //{APPL :ture, TSLA: false}
   // 履歴データを取得
   const loadHistory = async () => {
     try {
@@ -26,11 +25,18 @@ function HistoryList(props) {
     acc[item.symbol].push(item);
     return acc;
   }, {});
-  console.log("🚀 ~ groupedHistory ~ groupedHistory:", groupedHistory);
-  console.log(
-    "🚀 ~ {Object.entries ~ Object.entries(groupedHistory):",
-    Object.entries(groupedHistory)
-  );
+  // console.log("🚀 ~ groupedHistory ~ groupedHistory:", groupedHistory);
+  // console.log(
+  //   "🚀 ~ {Object.entries ~ Object.entries(groupedHistory):",
+  //   Object.entries(groupedHistory)
+  // );
+
+  const toggleSymbol = (symbol) => {
+    console.log(expandSymbols);
+    expandSymbols[symbol] = false;
+    expandSymbols[symbol] = !expandSymbols[symbol];
+    setExpandSymbols({ symbol: expandSymbols[symbol] });
+  };
 
   //  履歴を削除する処理
   const handleDelete = async (id) => {
@@ -54,38 +60,46 @@ function HistoryList(props) {
       {Object.entries(groupedHistory).map(([symbol, item]) => {
         return (
           <div key={symbol}>
-            <table>
-              <thead>
-                <tr>
-                  <th>銘柄</th>
-                  <th>検索日時</th>
-                  <th>表示期間</th>
-                  <th>モデル</th>
-                  <th>削除</th>
-                </tr>
-              </thead>
-              <tbody>
-                {history.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <button
-                        onClick={() => {
-                          props.historySelect(item); // グラフへ反映
-                        }}
-                      >
-                        {item.symbol}
-                      </button>
-                    </td>
-                    <td>{new Date(item.created_at).toLocaleString("ja-JP")}</td>
-                    <td>{item.range}</td>
-                    <td>{item.model}</td>
-                    <td>
-                      <button onClick={() => handleDelete(item.id)}>🗑</button>
-                    </td>
+            {/* トグルの設置 */}
+            <div>
+              <button onClick={toggleSymbol}>{symbol}</button>
+            </div>
+            {expandSymbols[symbol] && (
+              <table>
+                <thead>
+                  <tr>
+                    <th>銘柄</th>
+                    <th>検索日時</th>
+                    <th>表示期間</th>
+                    <th>モデル</th>
+                    <th>削除</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {item.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <button
+                          onClick={() => {
+                            props.historySelect(item); // グラフへ反映
+                          }}
+                        >
+                          {item.symbol}
+                        </button>
+                      </td>
+                      <td>
+                        {new Date(item.created_at).toLocaleString("ja-JP")}
+                      </td>
+                      <td>{item.range}</td>
+                      <td>{item.model}</td>
+                      <td>
+                        <button onClick={() => handleDelete(item.id)}>🗑</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         );
       })}
