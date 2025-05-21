@@ -40,18 +40,24 @@ function StockForm(props) {
   };
 
   return (
-    <form onSubmit={submitClick}>
+    <form
+      onSubmit={submitClick}
+      style={{ display: "flex", alignItems: "center", gap: "1rem" }}
+    >
       {/* 銘柄入力 */}
-      <input
-        type="text"
-        placeholder="例:AAPL"
-        value={symbol}
-        onChange={symbolChange}
-      />
+      <label>
+        <span style={{ marginRight: "0.5rem" }}>ティッカー :</span>
+        <input
+          type="text"
+          placeholder="例:AAPL"
+          value={symbol}
+          onChange={symbolChange}
+        />
+      </label>
 
       {/* 表示期間選択 */}
       <label>
-        表示期間:
+        <span style={{ marginRight: "0.5rem" }}>表示/予測期間 :</span>
         <select value={range} onChange={rangeChange}>
           <option value="1w">1週間</option>
           <option value="1m">1か月</option>
@@ -62,7 +68,7 @@ function StockForm(props) {
 
       {/* モデル選択 */}
       <label>
-        モデル:
+        <span style={{ marginRight: "0.5rem" }}>予測モデル :</span>
         <select value={model} onChange={modelChange}>
           <option value="model1">モデル1（幾何ブラウン運動）</option>
           <option value="model2">モデル2（ML: SVR）</option>

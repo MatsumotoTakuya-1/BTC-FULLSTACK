@@ -57,16 +57,33 @@ function HistoryList(props) {
 
   return (
     <div>
-      <h2>検索履歴</h2>
+      <h2 style={{ textAlign: "left" }}>検索履歴</h2>
       {Object.entries(groupedHistory).map(([symbol, item]) => {
         return (
           <div key={symbol}>
             {/* トグルの設置 */}
-            <div>
-              <button onClick={() => toggleSymbol(symbol)}>{symbol}</button>
+            <div
+              onClick={() => toggleSymbol(symbol)}
+              style={{
+                cursor: "pointer",
+                // background: "#f0f0f0",
+                padding: "0.7rem",
+                fontWeight: "bold",
+                textAlign: "left",
+              }}
+            >
+              📁 {symbol}: {"  "}
+              {item[0].company.name}
             </div>
             {expandSymbols[symbol] && (
-              <table>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  // marginBottom: "1rem",
+                  textAlign: "left",
+                }}
+              >
                 <thead>
                   <tr>
                     <th>銘柄</th>

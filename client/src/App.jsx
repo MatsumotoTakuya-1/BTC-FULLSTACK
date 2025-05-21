@@ -21,11 +21,24 @@ function App() {
   };
   return (
     <div className="">
-      <LogOut />
-      <h1>株価予測アプリ</h1>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <h1>株価予測アプリ</h1>
+        <LogOut />
+      </div>
 
       <StockForm searchResult={searchResult} />
+
+      <hr style={{ borderTop: "1px solid #ccc" }} />
       {stockData && <StockChart data={stockData} />}
+
+      <hr style={{ borderTop: "1px solid #ccc" }} />
+
       <HistoryList historySelect={historySelect} key={redrawData} />
       {/* /keyで渡すとkeyの値が変わるとReactコンポーネントが再描画される */}
     </div>
