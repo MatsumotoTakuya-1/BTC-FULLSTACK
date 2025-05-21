@@ -13,14 +13,39 @@ function CompareChart({ selectedStock }) {
   //data = [{履歴の株式情報},{},...]
   if (selectedStock.length === 0) return <p>比較対象が選択されてません</p>;
 
-  //最も未来までの日数を基準にする。選択したrange毎に予測範囲が違うから
-  const maxLength = Math.max(
-    ...selectedStock.map((stock) => stock.predicted.length)
+  const baseRange = selectedStock[0].range;
+  console.log("🚀 ~ CompareChart ~ baseRange:", baseRange);
+  const sameRangeStocks = selectedStock.filter((stock) => {
+    console.log("🚀 ~ sameRangeStocks ~ stock:", stock.range === baseRange);
+    stock.range === baseRange;
+  });
+  console.log("🚀 ~ sameRanegeSrocks ~ sameRanegeSrocks:", sameRangeStocks);
+
+  console.log(
+    "🚀 ~ CompareChart ~ selectedStock.length:",
+    selectedStock.length
   );
+  if (sameRangeStocks.length !== selectedStock.length) {
+    return <p>比較対象は同じ表示期間で選んでください</p>;
+  }
+
+  const actualLength = selectedStock[0].actual.length;
+  const predictedLength = selectedStock[0].predicted.length;
 
   const chartData = [];
-  for (let i = 0; i < maxLength; i++) {
-    const row = { date: selectedStock[0].predictedDates[i] || `${i + 1}日` };
+
+  //actual(過去の実データ）データを作成
+  for (let i = 0; i < actualLength; i++) {
+    const row = { date: selectedStock[0].actualDates[i] };
+    selectedStock.forEach((stock) => {
+      row[`${stock.symbol}-${stock.model}`] = stock.actual[i];
+    });
+    chartData.push(row);
+  }
+
+  //predictデータを作成
+  for (let i = 0; i < predictedLength; i++) {
+    const row = { date: selectedStock[0].predictedDates[i] };
     selectedStock.forEach((stock) => {
       row[`${stock.symbol}-${stock.model}`] = stock.predicted[i];
     });
@@ -40,13 +65,15 @@ function CompareChart({ selectedStock }) {
           <Tooltip />
           <Legend />
           {selectedStock.map((stock, index) => {
-            <Line
-              key={index}
-              type="monotone"
-              dataKey={`${stock.symbol}-${stock.model}`}
-              stroke={`hsl(${index * 50}, 70%, 50%)`}
-              dot={false}
-            />;
+            return (
+              <Line
+                key={index}
+                type="monotone"
+                dataKey={`${stock.symbol}-${stock.model}`}
+                stroke={`hsl(${index * 50}, 70%, 50%)`}
+                dot={false}
+              />
+            );
           })}
         </LineChart>
       </ResponsiveContainer>

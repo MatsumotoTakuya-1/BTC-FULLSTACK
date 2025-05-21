@@ -61,14 +61,16 @@ function StockChart({ data }) {
           <Line
             type="monotone"
             dataKey="actual"
-            stroke="#8884d8"
+            stroke="#4169e1"
             name="実データ"
+            dot={false}
           />
           <Line
             type="monotone"
             dataKey="predicted"
-            stroke="#82ca9d"
+            stroke="#008000"
             name="予測"
+            dot={false}
           />
         </LineChart>
       </ResponsiveContainer>
