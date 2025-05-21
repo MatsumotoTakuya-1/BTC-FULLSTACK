@@ -13,4 +13,4 @@ client/dist/
 # 環境変数ファイルをGitに含めない
 client/.env
 server/.env
-ml-api/.venv/
+ml-model/.venv/
