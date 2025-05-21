@@ -7,6 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
+
 function StockChart({ data }) {
   const {
     actual,

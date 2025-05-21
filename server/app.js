@@ -19,18 +19,10 @@ app.use(cookieParser());
 
 // dist 配信
 app.use(express.static(path.join(__dirname, "./public")));
-app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-app.get("/app", (req, res) => {
-  const sessionId = req.cookies.sessionId;
-  if (sessionId) {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-  } else {
-    res.redirect("/");
-  }
-});
-// app.get("/api/history", (req, res) => {
+// app.get("/login", (req, res) => {
+//   res.sendFile(path.join(__dirname, "public", "index.html"));
+// });
+// app.get("/app", (req, res) => {
 //   const sessionId = req.cookies.sessionId;
 //   if (sessionId) {
 //     res.sendFile(path.join(__dirname, "public", "index.html"));
@@ -38,6 +30,15 @@ app.get("/app", (req, res) => {
 //     res.redirect("/");
 //   }
 // });
+app.get("/api/app", (req, res) => {
+  const sessionId = req.cookies.sessionId;
+  console.log("🚀 ~ app.get ~ sessionId :", sessionId);
+  if (sessionId) {
+    res.status(200).json({ message: "認証に成功しました" });
+  } else {
+    res.status(401).json({ error: "認証に失敗しました" });
+  }
+});
 
 app.use("/api", predictRouter);
 app.use("/api", historyRouter);

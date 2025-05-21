@@ -4,10 +4,13 @@ import StockChart from "./components/StockChart";
 import HistoryList from "./components/HIstoryList";
 import LogOut from "./components/LogOut";
 import { useEffect, useState } from "react";
+import { fetchApp } from "./API/stockAPI";
+import { useNavigate } from "react-router";
 
 function App() {
   const [stockData, setStockData] = useState(null);
   const [redrawData, setRedrawData] = useState(0); //検索時の再描画用
+  const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
 
   const searchResult = (data) => {
     setStockData(data);
@@ -19,6 +22,26 @@ function App() {
   const historySelect = (data) => {
     setStockData(data);
   };
+
+  //認証用
+  // Appに入る
+  const loadApp = async () => {
+    try {
+      const res = await fetchApp();
+      // console.log("🚀 ~ loadApp ~ res:", res.status);
+      if (res.status !== 200) {
+        alert("セッションIDがありません");
+        navigate("/");
+      }
+    } catch (err) {
+      console.error("履歴の取得に失敗しました", err);
+    }
+  };
+
+  useEffect(() => {
+    loadApp();
+  });
+
   return (
     <div className="">
       <div

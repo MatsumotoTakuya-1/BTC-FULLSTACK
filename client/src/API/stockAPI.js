@@ -15,3 +15,8 @@ export const fetchHistory = async () => {
 export const deleteHistory = async (id) => {
   await axios.delete(`/api/history/${id}`);
 };
+
+export const fetchApp = async () => {
+  const res = await axios.get("/api/app");
+  return res;
+};
