@@ -17,22 +17,21 @@ app.use(cookieParser());
 // form からのリクエストを受けるために必要
 // app.use(express.urlencoded({ extended: true }));
 
-// dist 配信
+// dist 配信-----
 app.use(express.static(path.join(__dirname, "./public")));
-// app.get("/login", (req, res) => {
-//   res.sendFile(path.join(__dirname, "public", "index.html"));
-// });
-// app.get("/app", (req, res) => {
-//   const sessionId = req.cookies.sessionId;
-//   if (sessionId) {
-//     res.sendFile(path.join(__dirname, "public", "index.html"));
-//   } else {
-//     res.redirect("/");
-//   }
-// });
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+app.get("/app", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+app.get("/register", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+// -------------
+
 app.get("/api/app", (req, res) => {
   const sessionId = req.cookies.sessionId;
-  console.log("🚀 ~ app.get ~ sessionId :", sessionId);
   if (sessionId) {
     res.status(200).json({ message: "認証に成功しました" });
   } else {
@@ -40,14 +39,8 @@ app.get("/api/app", (req, res) => {
   }
 });
 
-app.use("/api", predictRouter);
-app.use("/api", historyRouter);
-
+app.use("/api/predict", predictRouter);
+app.use("/api/history", historyRouter);
 app.use("/api/auth", authRouter);
-
-// //セッションIDが有効な時の/api/auth/loginの処理→/appにリダイレクト
-// app.get("/login", async (req, res) => {
-//   console.log(req.body);
-// });
 
 module.exports = app;

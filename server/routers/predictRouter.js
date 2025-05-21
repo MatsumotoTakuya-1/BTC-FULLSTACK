@@ -5,7 +5,7 @@ const db = require("../db");
 const yahooFinance = require("yahoo-finance2").default;
 const math = require("mathjs");
 
-router.post("/predict", async (req, res) => {
+router.post("/", async (req, res) => {
   const { symbol, range = "1w", model = "model1" } = req.body;
   if (!symbol) return res.status(400).json({ error: "symbolは必須です" });
   try {
