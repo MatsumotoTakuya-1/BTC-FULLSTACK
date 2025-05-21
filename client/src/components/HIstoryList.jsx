@@ -1,16 +1,21 @@
 import { useState, useEffect } from "react";
 import { fetchHistory, deleteHistory } from "../API/stockAPI";
+import { useNavigate } from "react-router";
 
 function HistoryList(props) {
   const [history, setHistory] = useState([]);
   const [expandSymbols, setExpandSymbols] = useState({}); //{APPL :ture, TSLA: false}
+  const navigate = useNavigate();
   // 履歴データを取得
   const loadHistory = async () => {
     try {
-      const data = await fetchHistory();
-      setHistory(data);
-      // console.log("🚀 ~ HistoryList ~ history:", await history);
+      const res = await fetchHistory();
+      setHistory(res.data);
     } catch (err) {
+      if (err.response.status === 401) {
+        alert("セッションIDがありません");
+        navigate("/");
+      }
       console.error("履歴の取得に失敗しました", err);
     }
   };
@@ -50,6 +55,19 @@ function HistoryList(props) {
     }
   };
 
+  const selectedItem = (item) => {
+    //selectedStockは現在選択されている履歴の配列.itemはユーザーがクリックした履歴のアイテム
+    const exist = props.selectedStock.some((stock) => stock.id === item.id);
+    let updated;
+    if (exist) {
+      updated = props.selectedStock.filter((stock) => stock.id !== item.id); //もしあれば、履歴削除→チェックボックス外す側
+    } else {
+      updated = [...props.selectedStock, item]; //無ければ配列に追加→チェックボックスつける側
+    }
+
+    props.setSelectedStock(updated);
+  };
+
   //   初回に履歴取得
   useEffect(() => {
     loadHistory();
@@ -86,6 +104,7 @@ function HistoryList(props) {
               >
                 <thead>
                   <tr>
+                    <th>チェック</th>
                     <th>銘柄</th>
                     <th>検索日時</th>
                     <th>表示期間</th>
@@ -96,6 +115,12 @@ function HistoryList(props) {
                 <tbody>
                   {item.map((item) => (
                     <tr key={item.id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          onChange={() => selectedItem(item)}
+                        />
+                      </td>
                       <td>
                         <button
                           onClick={() => {

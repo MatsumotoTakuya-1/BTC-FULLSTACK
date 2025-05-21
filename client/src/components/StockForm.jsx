@@ -71,8 +71,9 @@ function StockForm(props) {
         <span style={{ marginRight: "0.5rem" }}>予測モデル :</span>
         <select value={model} onChange={modelChange}>
           <option value="model1">モデル1（幾何ブラウン運動）</option>
-          <option value="model2">モデル2（ML: SVR）</option>
-          <option value="model3">モデル3（ML: XGBoost）</option>
+          <option value="model2">モデル2（幾何ブラウン運動100回平均）</option>
+          <option value="model3">未実装：モデル3（ML: SVR）</option>
+          <option value="model4">未実装：モデル4（ML: XGBoost）</option>
         </select>
       </label>
 

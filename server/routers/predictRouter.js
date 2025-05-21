@@ -89,20 +89,33 @@ router.post("/", async (req, res) => {
     const annualReturn = dailyMean * 252; //平均リターン（年次）
     const annualResk = dailystd * Math.sqrt(252); //標準偏差（年次）
 
-    //年次リターン　→ 日次成長率
-    const dailyGrowRate = Math.exp(annualReturn / 252);
+    // //年次リターン　→ 日次成長率
+    // const dailyGrowRate = Math.exp(annualReturn / 252);
 
     // ---------------------------------------
 
     // 検索した銘柄の予測値（終値と期間）---------
     const lastPrice = actual[actual.length - 1];
-    // let predicted;
-    // //長さ7の空配列 [undefined, undefined, ..., undefined]つくり、各要素に対して (_, i) => {...} を実行（iは0〜6）
-    // predicted = Array.from({ length: days }, (_, i) =>
-    //   Math.round(lastPrice * Math.pow(dailyGrowRate, i + 1))
-    // );
+    let predicted;
+    //model3,4はマシーンラーニング予定
+    if (model === "model1" || "model3" || "model4") {
+      predicted = randomWalk(lastPrice, dailyMean, dailystd, days);
+    } else if (model === "model2") {
+      //幾何ブラウン運動100回分の平均値
+      const allPredictions = Array.from({ length: 100 }, () =>
+        randomWalk(lastPrice, dailyMean, dailystd, days)
+      );
 
-    const predicted = randomWalk(lastPrice, dailyMean, dailystd, days);
+      const average = [];
+      for (let i = 0; i < days; i++) {
+        let sum = 0;
+        for (let j = 0; j < 100; j++) {
+          sum += allPredictions[j][i]; //各日毎に100回合計値
+        }
+        average.push(sum / 100); //各日毎の平均値
+      }
+      predicted = average;
+    }
 
     const predictedDates = Array.from({ length: days }, (_, i) => {
       const date = new Date();

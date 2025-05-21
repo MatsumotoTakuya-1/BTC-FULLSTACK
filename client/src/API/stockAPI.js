@@ -9,7 +9,7 @@ export const fetchStockPrediction = async (symbol, range, model) => {
 
 export const fetchHistory = async () => {
   const res = await axios.get("/api/history");
-  return res.data;
+  return res;
 };
 
 export const deleteHistory = async (id) => {

@@ -38,6 +38,19 @@ app.get("/register", (req, res) => {
 });
 // -------------
 
+// /apiで始まるURLへのアクセスは意図してないので"/"にリダイレクト。
+//開発環境だとfrontのポートにリダイレクト、本番環境だとフロントはビルドするのでサーバのポートにリダイレクト
+app.use((req, res, next) => {
+  if (
+    req.path.startsWith("/api") &&
+    // req.headers.accept &&
+    req.headers.accept.includes("text/html") //これないと他のリクエストもリダイレクトしてしまう。直接url叩いた時だけリダイレクト
+  ) {
+    return res.redirect("/");
+  }
+  next();
+});
+
 app.get("/api/app", authMiddeware, (req, res) => {
   res.status(200).json({ message: "認証に成功しました" });
 });
