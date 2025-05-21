@@ -14,17 +14,10 @@ function CompareChart({ selectedStock }) {
   if (selectedStock.length === 0) return <p>比較対象が選択されてません</p>;
 
   const baseRange = selectedStock[0].range;
-  console.log("🚀 ~ CompareChart ~ baseRange:", baseRange);
   const sameRangeStocks = selectedStock.filter((stock) => {
-    console.log("🚀 ~ sameRangeStocks ~ stock:", stock.range === baseRange);
-    stock.range === baseRange;
+    return stock.range === baseRange;
   });
-  console.log("🚀 ~ sameRanegeSrocks ~ sameRanegeSrocks:", sameRangeStocks);
 
-  console.log(
-    "🚀 ~ CompareChart ~ selectedStock.length:",
-    selectedStock.length
-  );
   if (sameRangeStocks.length !== selectedStock.length) {
     return <p>比較対象は同じ表示期間で選んでください</p>;
   }
@@ -51,9 +44,22 @@ function CompareChart({ selectedStock }) {
     });
     chartData.push(row);
   }
-  console.log("🚀 ~ CompareChart ~ chartData:", chartData);
+  //   console.log("🚀 ~ CompareChart ~ chartData:", chartData);
 
   //chartData = [{date:"2025-05-22", "AAPL-model1":184, "TSLA-model2":180},{..},...]
+
+  //   比較チャート毎に色変える
+  const colors = [
+    "#008b8b",
+    "#ff7f50",
+    "#006400",
+    "#8b008b",
+    "#ff1493",
+    "#000080",
+    "#ff8c00",
+    "#556b2f",
+    "#ffdab9",
+  ];
 
   return (
     <div>
@@ -70,7 +76,7 @@ function CompareChart({ selectedStock }) {
                 key={index}
                 type="monotone"
                 dataKey={`${stock.symbol}-${stock.model}`}
-                stroke={`hsl(${index * 50}, 70%, 50%)`}
+                stroke={colors[index % colors.length]}
                 dot={false}
               />
             );
