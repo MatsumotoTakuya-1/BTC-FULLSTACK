@@ -10,9 +10,17 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser()); // express でcookieを取得
 
-// express でcookieを取得
-app.use(cookieParser());
+//認証用ミドルウェア
+const authMiddeware = (req, res, next) => {
+  const sessionId = req.cookies.sessionId;
+  if (sessionId) {
+    next();
+  } else {
+    return res.status(401).json({ error: "認証に失敗しました" });
+  }
+};
 
 // form からのリクエストを受けるために必要
 // app.use(express.urlencoded({ extended: true }));
@@ -30,17 +38,12 @@ app.get("/register", (req, res) => {
 });
 // -------------
 
-app.get("/api/app", (req, res) => {
-  const sessionId = req.cookies.sessionId;
-  if (sessionId) {
-    res.status(200).json({ message: "認証に成功しました" });
-  } else {
-    res.status(401).json({ error: "認証に失敗しました" });
-  }
+app.get("/api/app", authMiddeware, (req, res) => {
+  res.status(200).json({ message: "認証に成功しました" });
 });
+app.use("/api/predict", authMiddeware, predictRouter);
+app.use("/api/history", authMiddeware, historyRouter);
 
-app.use("/api/predict", predictRouter);
-app.use("/api/history", historyRouter);
-app.use("/api/auth", authRouter);
+app.use("/api/auth", authRouter); //login,ユーザ登録は認証不要
 
 module.exports = app;
