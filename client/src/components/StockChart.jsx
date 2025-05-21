@@ -8,7 +8,17 @@ import {
   Tooltip,
 } from "recharts";
 function StockChart({ data }) {
-  const { actual, actualDates, predicted, predictedDates, company } = data;
+  const {
+    actual,
+    actualDates,
+    predicted,
+    predictedDates,
+    company,
+    range,
+    model,
+    annualReturn,
+    annualResk,
+  } = data;
   //   console.log(company);
 
   // 実データと日付を結合（チャート描画用）
@@ -33,8 +43,11 @@ function StockChart({ data }) {
     <div>
       {company && (
         <>
-          <strong>{company.name} </strong>
-          {company.exchange} {company.currency}
+          <strong>{company.name} </strong>({company.exchange}/{" "}
+          {company.currency})<div>表示/予測範囲：{range}</div>
+          <div>使用モデル：{model}</div>
+          <div>年次平均リターン:{(annualReturn * 100).toFixed(2)}%</div>
+          <div>リスク(年次標準偏差):{(annualResk * 100).toFixed(2)}%</div>
         </>
       )}
       {/* サイズ指定しないとlinechartは描画されない */}

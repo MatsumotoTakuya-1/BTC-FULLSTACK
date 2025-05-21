@@ -30,14 +30,14 @@ app.get("/app", (req, res) => {
     res.redirect("/");
   }
 });
-app.get("/api/history", (req, res) => {
-  const sessionId = req.cookies.sessionId;
-  if (sessionId) {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-  } else {
-    res.redirect("/");
-  }
-});
+// app.get("/api/history", (req, res) => {
+//   const sessionId = req.cookies.sessionId;
+//   if (sessionId) {
+//     res.sendFile(path.join(__dirname, "public", "index.html"));
+//   } else {
+//     res.redirect("/");
+//   }
+// });
 
 app.use("/api", predictRouter);
 app.use("/api", historyRouter);

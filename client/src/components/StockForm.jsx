@@ -64,7 +64,7 @@ function StockForm(props) {
       <label>
         モデル:
         <select value={model} onChange={modelChange}>
-          <option value="model1">モデル1（単純成長）</option>
+          <option value="model1">モデル1（幾何ブラウン運動）</option>
           <option value="model2">モデル2（ML: SVR）</option>
           <option value="model3">モデル3（ML: XGBoost）</option>
         </select>

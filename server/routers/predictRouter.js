@@ -3,6 +3,7 @@ const router = express.Router();
 const axios = require("axios");
 const db = require("../db");
 const yahooFinance = require("yahoo-finance2").default;
+const math = require("mathjs");
 
 router.post("/predict", async (req, res) => {
   const { symbol, range = "1w", model = "model1" } = req.body;
@@ -73,15 +74,37 @@ router.post("/predict", async (req, res) => {
     const actualDates = result.map((d) => d.date.toISOString().slice(0, 10)); // 'YYYY-MM-DD'
     // ---------------------------------------
 
+    //リスクとリターンを求める-------------------
+    const logReturns = []; //1日毎の対数リターン
+    for (let i = 1; i < actual.length; i++) {
+      if (actual[i] && actual[i - 1]) {
+        const ret = Math.log(actual[i] / actual[i - 1]);
+        logReturns.push(ret);
+      }
+    }
+
+    //日次→年次のリターン、リスク
+    const dailyMean = math.mean(logReturns);
+    const dailystd = math.std(logReturns);
+    const annualReturn = dailyMean * 252; //平均リターン（年次）
+    const annualResk = dailystd * Math.sqrt(252); //標準偏差（年次）
+
+    //年次リターン　→ 日次成長率
+    const dailyGrowRate = Math.exp(annualReturn / 252);
+
+    // ---------------------------------------
+
     // 検索した銘柄の予測値（終値と期間）---------
     const lastPrice = actual[actual.length - 1];
-    let predicted;
-    //長さ7の空配列 [undefined, undefined, ..., undefined]つくり、各要素に対して (_, i) => {...} を実行（iは0〜6）
-    predicted = Array.from({ length: 7 }, (_, i) =>
-      Math.round(lastPrice * Math.pow(1.01, i + 1))
-    );
+    // let predicted;
+    // //長さ7の空配列 [undefined, undefined, ..., undefined]つくり、各要素に対して (_, i) => {...} を実行（iは0〜6）
+    // predicted = Array.from({ length: days }, (_, i) =>
+    //   Math.round(lastPrice * Math.pow(dailyGrowRate, i + 1))
+    // );
 
-    const predictedDates = Array.from({ length: 7 }, (_, i) => {
+    const predicted = randomWalk(lastPrice, dailyMean, dailystd, days);
+
+    const predictedDates = Array.from({ length: days }, (_, i) => {
       const date = new Date();
       date.setDate(date.getDate() + i + 1);
       return date.toISOString().slice(0, 10);
@@ -120,6 +143,8 @@ router.post("/predict", async (req, res) => {
         company,
         range,
         model,
+        annualReturn,
+        annualResk,
         created_at: new Date(),
       })
       .onConflict(["symbol", "range", "model"]) //ユニーク制約があり、組み合わせあれば
@@ -134,6 +159,8 @@ router.post("/predict", async (req, res) => {
       company,
       range,
       model,
+      annualReturn,
+      annualResk,
       created_at: new Date(),
     });
   } catch (err) {
@@ -141,5 +168,29 @@ router.post("/predict", async (req, res) => {
     res.status(500).json({ error: "株価取得に失敗しました" });
   }
 });
+
+//幾何ブラウン運動　St+1 = St * exp(μ＊Δt + σ* √Δt * ε)
+function randomWalk(lastPrice, dailyReturn, dailyVolatilty, days) {
+  const simulated = [];
+  let price = lastPrice;
+
+  for (let i = 0; i < days; i++) {
+    const epsilon = randomNormal(0, 1); //正規分布からの乱数
+    const growth = Math.exp(dailyReturn + dailyVolatilty * epsilon);
+    price = price * growth;
+    simulated.push(Math.round(price));
+  }
+
+  return simulated;
+}
+
+function randomNormal(mean = 0, stdDev = 1) {
+  let u = 0,
+    v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  const z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+  return z * stdDev + mean;
+}
 
 module.exports = router;
