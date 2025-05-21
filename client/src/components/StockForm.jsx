@@ -61,8 +61,12 @@ function StockForm(props) {
         <select value={range} onChange={rangeChange}>
           <option value="1w">1週間</option>
           <option value="1m">1か月</option>
+          <option value="3m">3か月</option>
           <option value="1y">1年</option>
           <option value="3y">3年</option>
+          <option value="5y">5年</option>
+          <option value="10y">10年</option>
+          <option value="30y">30年</option>
         </select>
       </label>
 
@@ -71,7 +75,7 @@ function StockForm(props) {
         <span style={{ marginRight: "0.5rem" }}>予測モデル :</span>
         <select value={model} onChange={modelChange}>
           <option value="model1">モデル1（幾何ブラウン運動）</option>
-          <option value="model2">モデル2（幾何ブラウン運動100回平均）</option>
+          <option value="model2">モデル2（幾何ブラウン運動300回平均）</option>
           <option value="model3">未実装：モデル3（ML: SVR）</option>
           <option value="model4">未実装：モデル4（ML: XGBoost）</option>
         </select>

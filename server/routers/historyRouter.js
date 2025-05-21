@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../db");
 
 router.get("/", async (req, res) => {
-  const results = await db("histories").orderBy("created_at", "desc").limit(20);
+  const results = await db("histories").orderBy("created_at", "desc").limit(30);
   res.json(results);
 });
 

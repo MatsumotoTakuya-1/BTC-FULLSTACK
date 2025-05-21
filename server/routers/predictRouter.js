@@ -14,11 +14,23 @@ router.post("/", async (req, res) => {
       case "1m":
         days = 30;
         break;
+      case "3m":
+        days = 30 * 3;
+        break;
       case "1y":
         days = 365;
         break;
       case "3y":
         days = 365 * 3;
+        break;
+      case "5y":
+        days = 365 * 5;
+        break;
+      case "10y":
+        days = 365 * 10;
+        break;
+      case "30y":
+        days = 365 * 30;
         break;
       default:
         days = 7; // '1w
@@ -101,18 +113,19 @@ router.post("/", async (req, res) => {
     if (model === "model1" || "model3" || "model4") {
       predicted = randomWalk(lastPrice, dailyMean, dailystd, days);
     } else if (model === "model2") {
-      //幾何ブラウン運動100回分の平均値
-      const allPredictions = Array.from({ length: 100 }, () =>
+      //幾何ブラウン運動300回分の平均値
+      const simulatedCount = 300;
+      const allPredictions = Array.from({ length: simulatedCount }, () =>
         randomWalk(lastPrice, dailyMean, dailystd, days)
       );
 
       const average = [];
       for (let i = 0; i < days; i++) {
         let sum = 0;
-        for (let j = 0; j < 100; j++) {
+        for (let j = 0; j < simulatedCount; j++) {
           sum += allPredictions[j][i]; //各日毎に100回合計値
         }
-        average.push(sum / 100); //各日毎の平均値
+        average.push(sum / simulatedCount); //各日毎の平均値
       }
       predicted = average;
     }
