@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchFavorites, updatedFavorite } from "../API/stockAPI";
+import FavoriteChart from "./FavoriteChart";
 
 function Favorite(props) {
   const [favorites, setFavorites] = useState([]);
@@ -40,11 +41,32 @@ function Favorite(props) {
     acc[item.symbol].push(item);
     return acc;
   }, {});
+
   // console.log("🚀 ~ groupedFavorite ~ groupedFavorite:", groupedFavorite);
+  //ポートフォリオ全体のリターンとリスクを計算ーーーーーーーーーーーーー
+  const totalReturn = favorites.reduce(
+    (acc, item) => acc + Number(item.annualReturn),
+    0
+  );
+  const totalResk = favorites.reduce(
+    (acc, item) => acc + Number(item.annualResk),
+    0
+  );
+  const averageReturn =
+    favorites.length > 0 ? totalReturn / favorites.length : 0;
+  const averageResk = favorites.length > 0 ? totalResk / favorites.length : 0;
 
   return (
     <div>
       <h2 style={{ textAlign: "left" }}>お気に入りリスト</h2>
+      <div style={{ textAlign: "left" }}>
+        <strong>ポートフォリオ全体↓</strong>
+        <p>
+          年次平均リターン：{(averageReturn * 100).toFixed(2)}%,
+          リスク(年次標準偏差)：
+          {(averageResk * 100).toFixed(2)}%
+        </p>
+      </div>
       {Object.entries(groupedFavorite).map(([symbol, item]) => {
         return (
           <div key={symbol}>
@@ -96,6 +118,10 @@ function Favorite(props) {
           </div>
         );
       })}
+
+      <hr style={{ borderTop: "1px solid #ccc" }} />
+
+      <FavoriteChart favorites={favorites} />
     </div>
   );
 }
