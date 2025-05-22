@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchFavorites, updatedFavorite } from "../API/stockAPI";
 import FavoriteChart from "./FavoriteChart";
+import { Typography, Box, Paper } from "@mui/material";
 
 function Favorite(props) {
   const [favorites, setFavorites] = useState([]);
@@ -58,15 +59,16 @@ function Favorite(props) {
 
   return (
     <div>
-      <h2 style={{ textAlign: "left" }}>お気に入りリスト</h2>
-      <div style={{ textAlign: "left" }}>
-        <strong>ポートフォリオ全体↓</strong>
-        <p>
-          年次平均リターン：{(averageReturn * 100).toFixed(2)}%,
-          リスク(年次標準偏差)：
+      <Typography variant="h6" gutterBottom>
+        お気に入りリスト
+      </Typography>
+      <Box>
+        <Typography>
+          <strong>ポートフォリオ全体:</strong>
+          年次平均リターン：{(averageReturn * 100).toFixed(2)}%, リスク：
           {(averageResk * 100).toFixed(2)}%
-        </p>
-      </div>
+        </Typography>
+      </Box>
       {Object.entries(groupedFavorite).map(([symbol, item]) => {
         return (
           <div key={symbol}>

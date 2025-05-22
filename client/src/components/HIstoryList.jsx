@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchHistory, deleteHistory, updatedFavorite } from "../API/stockAPI";
 import { useNavigate } from "react-router";
+import { Typography, Box, IconButton, Checkbox } from "@mui/material";
 
 function HistoryList(props) {
   const [history, setHistory] = useState([]);
@@ -100,7 +101,7 @@ function HistoryList(props) {
 
   return (
     <div>
-      <h2 style={{ textAlign: "left" }}>検索履歴</h2>
+      <Typography variant="h6" gutterBottom>検索履歴</Typography>
       {Object.entries(groupedHistory).map(([symbol, item]) => {
         return (
           <div key={symbol}>

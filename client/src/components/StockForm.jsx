@@ -1,89 +1,74 @@
 import { useState } from "react";
 import { fetchStockPrediction } from "../API/stockAPI";
+import {
+  Box,
+  TextField,
+  Button,
+  MenuItem,
+  Paper,
+  Typography,
+} from "@mui/material";
 
-function StockForm(props) {
-  // 銘柄・期間・モデルのステート
+function StockForm({ searchResult }) {
   const [symbol, setSymbol] = useState("");
   const [range, setRange] = useState("1w");
   const [model, setModel] = useState("model1");
 
-  // 銘柄入力時の処理（英大文字で自動変換）
-  const symbolChange = (e) => {
-    setSymbol(e.target.value.toUpperCase());
-  };
-
-  // 期間変更時の処理
-  const rangeChange = (e) => {
-    setRange(e.target.value);
-  };
-
-  // モデル変更時の処理
-  const modelChange = (e) => {
-    setModel(e.target.value);
-  };
+  const symbolChange = (e) => setSymbol(e.target.value.toUpperCase());
+  const rangeChange = (e) => setRange(e.target.value);
+  const modelChange = (e) => setModel(e.target.value);
 
   const submitClick = async (e) => {
-    e.preventDefault(); //フォーム送信後のページリロード止める。
+    e.preventDefault();
     if (!symbol) {
       alert("銘柄を入力してください");
       return;
     }
     try {
       const data = await fetchStockPrediction(symbol, range, model);
-      console.log(data);
-
-      props.searchResult(data);
+      searchResult(data);
     } catch (err) {
-      console.error("API取得失敗:", err);
       alert("株価予測データの取得に失敗しました");
+      console.error(err);
     }
   };
 
   return (
-    <form
-      onSubmit={submitClick}
-      style={{ display: "flex", alignItems: "center", gap: "1rem" }}
-    >
-      {/* 銘柄入力 */}
-      <label>
-        <span style={{ marginRight: "0.5rem" }}>ティッカー :</span>
-        <input
-          type="text"
-          placeholder="例:AAPL"
-          value={symbol}
-          onChange={symbolChange}
-        />
-      </label>
-
-      {/* 表示期間選択 */}
-      <label>
-        <span style={{ marginRight: "0.5rem" }}>表示/予測期間 :</span>
-        <select value={range} onChange={rangeChange}>
-          <option value="1w">1週間</option>
-          <option value="1m">1か月</option>
-          <option value="3m">3か月</option>
-          <option value="1y">1年</option>
-          <option value="3y">3年</option>
-          <option value="5y">5年</option>
-          <option value="10y">10年</option>
-          <option value="30y">30年</option>
-        </select>
-      </label>
-
-      {/* モデル選択 */}
-      <label>
-        <span style={{ marginRight: "0.5rem" }}>予測モデル :</span>
-        <select value={model} onChange={modelChange}>
-          <option value="model1">モデル1（幾何ブラウン運動）</option>
-          <option value="model2">モデル2（幾何ブラウン運動300回平均）</option>
-          <option value="model3">未実装：モデル3（ML: SVR）</option>
-          <option value="model4">未実装：モデル4（ML: XGBoost）</option>
-        </select>
-      </label>
-
-      {/* 送信ボタン */}
-      <button type="submit">検索</button>
-    </form>
+    <Box component="form" onSubmit={submitClick} display="flex" gap={2} flexWrap="wrap">
+      <TextField
+        label="ティッカー"
+        placeholder="例: AAPL"
+        value={symbol}
+        onChange={symbolChange}
+        required
+      />
+      <TextField
+        select
+        label="表示期間"
+        value={range}
+        onChange={rangeChange}
+      >
+        {["1w", "1m", "3m", "1y", "3y", "5y", "10y", "30y"].map((r) => (
+          <MenuItem key={r} value={r}>
+            {r}
+          </MenuItem>
+        ))}
+      </TextField>
+      <TextField
+        select
+        label="予測モデル"
+        value={model}
+        onChange={modelChange}
+      >
+        <MenuItem value="model1">モデル1（幾何ブラウン運動）</MenuItem>
+        <MenuItem value="model2">モデル2（300回平均）</MenuItem>
+        <MenuItem value="model3">モデル3（SVR）</MenuItem>
+        <MenuItem value="model4">モデル4（XGBoost）</MenuItem>
+      </TextField>
+      <Button variant="contained" color="primary" type="submit">
+        検索
+      </Button>
+    </Box>
   );
 }
 
