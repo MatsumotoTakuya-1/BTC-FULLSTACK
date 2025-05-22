@@ -69,7 +69,7 @@ function HistoryList(props) {
 
   const favoriteSelectedItem = async (id, checked) => {
     const update = await updatedFavorite(id, checked);
-    props.setFavkey(checked);
+    props.setFavkey((prev) => prev + 1);
 
     // setHistory((prev) =>
     //   prev.map((item) =>

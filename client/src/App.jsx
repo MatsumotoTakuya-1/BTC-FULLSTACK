@@ -16,8 +16,8 @@ function App() {
   const [showCompare, setShowCompare] = useState(false); //比較機能のON/OFF
   const [selectedStock, setSelectedStock] = useState([]); //比較機能のチェックボックス用
   const [username, setUsername] = useState("");
-  const [favkey, setFavkey] = useState(false); //お気に入り機能のチェックボックス用
-
+  const [favkey, setFavkey] = useState(0); //お気に入り機能のチェックボックス用
+  // console.log("🚀 ~ App ~ favkey:", favkey);
   // console.log("🚀 ~ App ~ selectedStock:", selectedStock);
 
   const searchResult = (data) => {
