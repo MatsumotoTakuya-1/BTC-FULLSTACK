@@ -22,22 +22,29 @@ function RegisterForm() {
   return (
     <div>
       <h2>ユーザ登録</h2>
-      <input
-        placeholder="ユーザー名"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      ></input>
-      <input
-        placeholder="メールアドレス"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      ></input>
-      <input
-        placeholder="パスワード"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      ></input>
-      <button onClick={processingRegister}>登録</button>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          processingRegister();
+        }}
+      >
+        <input
+          placeholder="ユーザー名"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        ></input>
+        <input
+          placeholder="メールアドレス"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        ></input>
+        <input
+          placeholder="パスワード"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        ></input>
+        <button type="submit">登録</button>
+      </form>
     </div>
   );
 }

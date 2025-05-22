@@ -12,6 +12,18 @@ export const fetchHistory = async () => {
   return res;
 };
 
+export const fetchFavorites = async () => {
+  const res = await axios.get("/api/history/favorite");
+  return res;
+};
+
+//favoriteはブーリアン
+export const updatedFavorite = async (id, favorite) => {
+  const res = await axios.patch(`/api/history/favorite/${id}`, { favorite });
+  // console.log("🚀 ~ updatedFavorite ~ res:", res);
+  return res;
+};
+
 export const deleteHistory = async (id) => {
   await axios.delete(`/api/history/${id}`);
 };

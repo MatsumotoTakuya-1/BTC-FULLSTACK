@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchHistory, deleteHistory } from "../API/stockAPI";
+import { fetchHistory, deleteHistory, updatedFavorite } from "../API/stockAPI";
 import { useNavigate } from "react-router";
 
 function HistoryList(props) {
@@ -55,7 +55,7 @@ function HistoryList(props) {
     }
   };
 
-  const selectedItem = (item) => {
+  const compareSelectedItem = (item) => {
     //selectedStockは現在選択されている履歴の配列.itemはユーザーがクリックした履歴のアイテム
     const exist = props.selectedStock.some((stock) => stock.id === item.id);
     let updated;
@@ -64,8 +64,18 @@ function HistoryList(props) {
     } else {
       updated = [...props.selectedStock, item]; //無ければ配列に追加→チェックボックスつける側
     }
-
     props.setSelectedStock(updated);
+  };
+
+  const favoriteSelectedItem = async (id, checked) => {
+    const update = await updatedFavorite(id, checked);
+    props.setFavkey(checked);
+
+    // setHistory((prev) =>
+    //   prev.map((item) =>
+    //     item.id === id ? { ...item, favorite: checked } : item
+    //   )
+    // );
   };
 
   //   初回に履歴取得
@@ -109,6 +119,7 @@ function HistoryList(props) {
                     <th>検索日時</th>
                     <th>表示期間</th>
                     <th>モデル</th>
+                    <th>お気に入り登録</th>
                     <th>削除</th>
                   </tr>
                 </thead>
@@ -118,7 +129,7 @@ function HistoryList(props) {
                       <td>
                         <input
                           type="checkbox"
-                          onChange={() => selectedItem(item)}
+                          onChange={() => compareSelectedItem(item)}
                         />
                       </td>
                       <td>
@@ -135,6 +146,15 @@ function HistoryList(props) {
                       </td>
                       <td>{item.range}</td>
                       <td>{item.model}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          onChange={(e) => {
+                            // console.log(e.target.checked);
+                            favoriteSelectedItem(item.id, e.target.checked);
+                          }}
+                        />
+                      </td>
                       <td>
                         <button onClick={() => handleDelete(item.id)}>🗑</button>
                       </td>

@@ -16,7 +16,7 @@ function LogOut() {
   };
   return (
     <div>
-      <button onClick={processingLogout}>ログアウト</button>
+      <button onClick={processingLogout}>Logout</button>
     </div>
   );
 }

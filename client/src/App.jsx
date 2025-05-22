@@ -7,15 +7,18 @@ import CompareChart from "./components/CompareChart";
 import { useEffect, useState } from "react";
 import { fetchApp } from "./API/stockAPI";
 import { useNavigate } from "react-router";
+import Favorite from "./components/Favorite";
 
 function App() {
   const [stockData, setStockData] = useState(null);
   const [redrawData, setRedrawData] = useState(0); //検索時の再描画用
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
   const [showCompare, setShowCompare] = useState(false); //比較機能のON/OFF
-  const [selectedStock, setSelectedStock] = useState([]);
+  const [selectedStock, setSelectedStock] = useState([]); //比較機能のチェックボックス用
+  const [username, setUsername] = useState("");
+  const [favkey, setFavkey] = useState(false); //お気に入り機能のチェックボックス用
+
   // console.log("🚀 ~ App ~ selectedStock:", selectedStock);
-  let username;
 
   const searchResult = (data) => {
     setStockData(data);
@@ -38,7 +41,7 @@ function App() {
     try {
       const res = await fetchApp();
       // console.log("🚀 ~ loadApp ~ res:", res);
-      username = await res.data.username;
+      setUsername(res.data.username); //stateで管理しないと再度レンダリングしてくれない
       console.log("認証に成功しました");
     } catch (err) {
       //セッションID無ければ401を返し,catchに入る
@@ -50,7 +53,6 @@ function App() {
       }
     }
   };
-  console.log("🚀 ~ loadApp ~ username:", username);
 
   useEffect(() => {
     loadApp();
@@ -72,10 +74,15 @@ function App() {
         }}
       >
         <h1>株価予測アプリ</h1>
-
-        <LogOut />
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <p>
+            Login user：
+            <br />
+            {username}
+          </p>
+          <LogOut />
+        </div>
       </div>
-      <p>{username}</p>
       {/* 検索フォーム */}
       <StockForm searchResult={searchResult} />
 
@@ -95,8 +102,13 @@ function App() {
         key={redrawData}
         selectedStock={selectedStock}
         setSelectedStock={setSelectedStock}
+        setFavkey={setFavkey}
       />
       {/* /keyで渡すとkeyの値が変わるとReactコンポーネントが再描画される */}
+
+      <hr style={{ borderTop: "1px solid #ccc" }} />
+
+      <Favorite favkey={favkey} />
     </div>
   );
 }
