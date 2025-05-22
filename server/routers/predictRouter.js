@@ -227,4 +227,16 @@ function randomNormal(mean = 0, stdDev = 1) {
   return z * stdDev + mean;
 }
 
+router.post("/ticker", async (req, res) => {
+  const { companyName } = req.body;
+  console.log("🚀 ~ router.post ~ companyName :", companyName);
+
+  const result = await axios.get(
+    `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(
+      companyName
+    )}`
+  );
+  // console.log("🚀 ~ router.post ~ result.data :", result.data.quotes);
+  return res.json({ seach: result.data.quotes });
+});
 module.exports = router;

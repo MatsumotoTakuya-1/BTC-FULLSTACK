@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { fetchApp } from "./API/stockAPI";
 import { useNavigate } from "react-router";
 import Favorite from "./components/Favorite";
+import TickerSeach from "./components/TickerSeach";
 
 function App() {
   const [stockData, setStockData] = useState(null);
@@ -109,6 +110,10 @@ function App() {
       <hr style={{ borderTop: "1px solid #ccc" }} />
 
       <Favorite favkey={favkey} />
+
+      <hr style={{ borderTop: "1px solid #ccc" }} />
+
+      <TickerSeach />
     </div>
   );
 }
