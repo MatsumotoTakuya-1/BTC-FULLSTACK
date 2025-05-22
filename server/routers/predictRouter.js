@@ -6,6 +6,9 @@ const yahooFinance = require("yahoo-finance2").default;
 const math = require("mathjs");
 
 router.post("/", async (req, res) => {
+  const user_id = req.userId; //ユーザ情報
+  // console.log("🚀 ~ router.post ~ userId:", userId);
+
   const { symbol, range = "1w", model = "model1" } = req.body;
   if (!symbol) return res.status(400).json({ error: "symbolは必須です" });
   try {
@@ -171,6 +174,7 @@ router.post("/", async (req, res) => {
         model,
         annualReturn,
         annualResk,
+        user_id,
         created_at: new Date(),
       })
       .onConflict(["symbol", "range", "model"]) //ユニーク制約があり、組み合わせあれば
@@ -187,6 +191,7 @@ router.post("/", async (req, res) => {
       model,
       annualReturn,
       annualResk,
+      user_id,
       created_at: new Date(),
     });
   } catch (err) {

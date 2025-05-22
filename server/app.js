@@ -5,6 +5,7 @@ const predictRouter = require("./routers/predictRouter");
 const historyRouter = require("./routers/historyRouter");
 const authRouter = require("./routers/authRouter");
 const cookieParser = require("cookie-parser"); //サーバー側でクッキーを扱うミドルウェア?
+const db = require("./db");
 
 const app = express();
 
@@ -13,13 +14,21 @@ app.use(express.json());
 app.use(cookieParser()); // express でcookieを取得
 
 //認証用ミドルウェア
-const authMiddeware = (req, res, next) => {
+const authMiddeware = async (req, res, next) => {
   const sessionId = req.cookies.sessionId;
-  if (sessionId) {
-    next();
-  } else {
-    return res.status(401).json({ error: "認証に失敗しました" });
+  if (!sessionId) {
+    return res
+      .status(401)
+      .json({ error: "認証に失敗しました。セッションが無いか期限切れです。" });
   }
+
+  const session = await db("sessions").where({ session_id: sessionId }).first();
+  if (!session) {
+    return res.status(401).json({ error: "無効なセッション" });
+  }
+  req.userId = session.user_id; //requestオブジェクトにuseId:user_idを追加
+  // console.log("🚀 ~ authMiddeware ~ req.useId:", req.useId);
+  next();
 };
 
 // form からのリクエストを受けるために必要
@@ -51,8 +60,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/api/app", authMiddeware, (req, res) => {
-  res.status(200).json({ message: "認証に成功しました" });
+app.get("/api/app", authMiddeware, async (req, res) => {
+  const user_id = req.userId;
+  const user = await db("users").where({ id: user_id }).first();
+  // console.log("🚀 ~ app.get ~ user:", user.username);
+  res
+    .status(200)
+    .json({ username: user.username, message: "認証に成功しました!" });
 });
 app.use("/api/predict", authMiddeware, predictRouter);
 app.use("/api/history", authMiddeware, historyRouter);
