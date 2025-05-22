@@ -15,6 +15,7 @@ function App() {
   const [showCompare, setShowCompare] = useState(false); //比較機能のON/OFF
   const [selectedStock, setSelectedStock] = useState([]);
   // console.log("🚀 ~ App ~ selectedStock:", selectedStock);
+  let username;
 
   const searchResult = (data) => {
     setStockData(data);
@@ -36,7 +37,8 @@ function App() {
   const loadApp = async () => {
     try {
       const res = await fetchApp();
-      // console.log("🚀 ~ loadApp ~ res:", res.status);
+      // console.log("🚀 ~ loadApp ~ res:", res);
+      username = await res.data.username;
       console.log("認証に成功しました");
     } catch (err) {
       //セッションID無ければ401を返し,catchに入る
@@ -48,10 +50,17 @@ function App() {
       }
     }
   };
+  console.log("🚀 ~ loadApp ~ username:", username);
 
   useEffect(() => {
     loadApp();
-  });
+
+    const interval = setInterval(() => {
+      loadApp();
+    }, 10 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="">
@@ -63,9 +72,10 @@ function App() {
         }}
       >
         <h1>株価予測アプリ</h1>
+
         <LogOut />
       </div>
-
+      <p>{username}</p>
       {/* 検索フォーム */}
       <StockForm searchResult={searchResult} />
 
