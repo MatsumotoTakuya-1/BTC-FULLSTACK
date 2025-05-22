@@ -5,12 +5,22 @@ import { useNavigate } from "react-router";
 function HistoryList(props) {
   const [history, setHistory] = useState([]);
   const [expandSymbols, setExpandSymbols] = useState({}); //{APPL :ture, TSLA: false}
+  const [favCheckedItem, setFavCheckedItem] = useState({});
   const navigate = useNavigate();
+
   // 履歴データを取得
   const loadHistory = async () => {
     try {
       const res = await fetchHistory();
       setHistory(res.data);
+
+      //お気に入りのチェック状態を保持
+      const initialCheck = {};
+      res.data.forEach((item) => {
+        const saved = localStorage.getItem(item.id);
+        initialCheck[item.id] = saved === "true";
+      });
+      setFavCheckedItem(initialCheck);
     } catch (err) {
       if (err.response.status === 401) {
         alert("セッションIDがありません");
@@ -70,6 +80,11 @@ function HistoryList(props) {
   const favoriteSelectedItem = async (id, checked) => {
     const update = await updatedFavorite(id, checked);
     props.setFavkey((prev) => prev + 1);
+    setFavCheckedItem({
+      ...favCheckedItem,
+      [id]: checked,
+    });
+    localStorage.setItem(id, checked);
 
     // setHistory((prev) =>
     //   prev.map((item) =>
@@ -149,6 +164,7 @@ function HistoryList(props) {
                       <td>
                         <input
                           type="checkbox"
+                          checked={favCheckedItem[item.id]}
                           onChange={(e) => {
                             // console.log(e.target.checked);
                             favoriteSelectedItem(item.id, e.target.checked);

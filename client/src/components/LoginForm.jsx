@@ -33,6 +33,7 @@ function LoginForm() {
         ></input>
         <input
           placeholder="パスワード"
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></input>

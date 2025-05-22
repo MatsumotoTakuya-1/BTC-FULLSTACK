@@ -35,11 +35,13 @@ function RegisterForm() {
         ></input>
         <input
           placeholder="メールアドレス"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         ></input>
         <input
           placeholder="パスワード"
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></input>
