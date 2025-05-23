@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { Typography, Box, IconButton, Checkbox } from "@mui/material";
 
 function FavoriteChart({ favorites }) {
   if (favorites.length === 0) return <p>比較対象が選択されてません</p>;
@@ -63,7 +64,9 @@ function FavoriteChart({ favorites }) {
   return (
     <div>
       <>
-        <div>表示/予測範囲：{favorites[0].range}</div>
+        <Typography variant="body1" align="center">
+          <div>表示/予測範囲：{favorites[0].range}</div>
+        </Typography>
       </>
       {/* サイズ指定しないとlinechartは描画されない */}
       <ResponsiveContainer width="100%" height={350}>

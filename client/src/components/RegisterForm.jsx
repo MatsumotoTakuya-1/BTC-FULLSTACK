@@ -1,6 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Link as MuiLink,
+} from "@mui/material";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -20,34 +28,63 @@ function RegisterForm() {
   };
 
   return (
-    <div>
-      <h2>ユーザ登録</h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          processingRegister();
-        }}
-      >
-        <input
-          placeholder="ユーザー名"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        ></input>
-        <input
-          placeholder="メールアドレス"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        ></input>
-        <input
-          placeholder="パスワード"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        ></input>
-        <button type="submit">登録</button>
-      </form>
-    </div>
+    <Container maxWidth="xs">
+      <Box sx={{ mt: 8, mb: 4 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          ユーザ登録
+        </Typography>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            processingRegister();
+          }}
+        >
+          <TextField
+            label="ユーザー名"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <TextField
+            label="メールアドレス"
+            type="email"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <TextField
+            label="パスワード"
+            type="password"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2, mb: 2 }}
+          >
+            登録
+          </Button>
+        </form>
+        <Typography align="center">
+          <MuiLink component={Link} to="/login">
+            ログインはこちら
+          </MuiLink>
+        </Typography>
+      </Box>
+    </Container>
   );
 }
 

@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { fetchFavorites, updatedFavorite } from "../API/stockAPI";
 import FavoriteChart from "./FavoriteChart";
+import { Typography, Box, IconButton, Checkbox } from "@mui/material";
+
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 function Favorite(props) {
   const [favorites, setFavorites] = useState([]);
@@ -58,15 +67,19 @@ function Favorite(props) {
 
   return (
     <div>
-      <h2 style={{ textAlign: "left" }}>お気に入りリスト</h2>
-      <div style={{ textAlign: "left" }}>
-        <strong>ポートフォリオ全体↓</strong>
-        <p>
-          年次平均リターン：{(averageReturn * 100).toFixed(2)}%,
-          リスク(年次標準偏差)：
+      <Typography variant="h5" gutterBottom>
+        お気に入りリスト
+      </Typography>
+      <Box>
+        <Typography variant="body2" align="center">
+          <strong>ポートフォリオ全体:</strong>
+        </Typography>
+
+        <Typography variant="body2" align="center">
+          年次平均リターン：{(averageReturn * 100).toFixed(2)}%, リスク：
           {(averageResk * 100).toFixed(2)}%
-        </p>
-      </div>
+        </Typography>
+      </Box>
       {Object.entries(groupedFavorite).map(([symbol, item]) => {
         return (
           <div key={symbol}>
@@ -85,35 +98,35 @@ function Favorite(props) {
               {item[0].company.name}
             </div>
             {expandSymbols[symbol] && (
-              <table
-                style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  // marginBottom: "1rem",
-                  textAlign: "left",
-                }}
-              >
-                <thead>
-                  <tr>
-                    <th>銘柄</th>
-                    <th>検索日時</th>
-                    <th>表示期間</th>
-                    <th>モデル</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {item.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.symbol}</td>
-                      <td>
-                        {new Date(item.created_at).toLocaleString("ja-JP")}
-                      </td>
-                      <td>{item.range}</td>
-                      <td>{item.model}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="light">銘柄</TableCell>
+                      <TableCell align="light">検索日時</TableCell>
+                      <TableCell align="light">表示期間</TableCell>
+                      <TableCell align="light">モデル</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {item.map((item) => (
+                      <TableRow
+                        key={item.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell align="light">{item.symbol}</TableCell>
+                        <TableCell align="light">
+                          {new Date(item.created_at).toLocaleString("ja-JP")}
+                        </TableCell>
+                        <TableCell align="light">{item.range}</TableCell>
+                        <TableCell align="light">{item.model}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             )}
           </div>
         );

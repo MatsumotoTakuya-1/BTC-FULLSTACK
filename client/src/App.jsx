@@ -9,6 +9,14 @@ import { fetchApp } from "./API/stockAPI";
 import { useNavigate } from "react-router";
 import Favorite from "./components/Favorite";
 import TickerSeach from "./components/TickerSeach";
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Divider,
+  Paper,
+} from "@mui/material";
 
 function App() {
   const [stockData, setStockData] = useState(null);
@@ -66,55 +74,80 @@ function App() {
   }, []);
 
   return (
-    <div className="">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
+    <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
+      {/* ヘッダー */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={3}
       >
-        <h1>株価予測アプリ</h1>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <p>
-            Login user：
-            <br />
+        <Typography variant="h3">株価予測アプリ</Typography>
+        <Box display="flex" alignItems="center" gap={2}>
+          <Typography variant="body1">
+            Login user: <br />
             {username}
-          </p>
+          </Typography>
           <LogOut />
-        </div>
-      </div>
+        </Box>
+      </Box>
+
       {/* 検索フォーム */}
-      <StockForm searchResult={searchResult} />
+      <Paper sx={{ p: 2, mb: 3 }}>
+        <StockForm searchResult={searchResult} />
 
-      <button onClick={compareToggle} style={{ alignItems: "left" }}>
-        {showCompare ? "比較チャートを閉じる" : "比較チャートモード"}
-      </button>
+        <Button
+          onClick={compareToggle}
+          variant="text"
+          color="primary"
+          sx={{ mt: 2 }}
+        >
+          {showCompare ? "比較チャートを閉じる" : "比較チャートモード"}
+        </Button>
+      </Paper>
 
-      <hr style={{ borderTop: "1px solid #ccc" }} />
+      <Divider sx={{ my: 3 }} />
 
-      {stockData && !showCompare && <StockChart data={stockData} />}
-      {showCompare && <CompareChart selectedStock={selectedStock} />}
+      {/* チャート */}
+      {stockData && !showCompare && (
+        <Paper sx={{ p: 2, mb: 3 }}>
+          <StockChart data={stockData} />
+        </Paper>
+      )}
+      {showCompare && (
+        <Paper sx={{ p: 2, mb: 3 }}>
+          <CompareChart selectedStock={selectedStock} />
+        </Paper>
+      )}
 
-      <hr style={{ borderTop: "1px solid #ccc" }} />
+      <Divider sx={{ my: 3 }} />
 
-      <HistoryList
-        historySelect={historySelect}
-        key={redrawData}
-        selectedStock={selectedStock}
-        setSelectedStock={setSelectedStock}
-        setFavkey={setFavkey}
-      />
-      {/* /keyで渡すとkeyの値が変わるとReactコンポーネントが再描画される */}
+      {/* 履歴 */}
+      <Paper sx={{ p: 2, mb: 3 }}>
+        <HistoryList
+          historySelect={historySelect}
+          key={redrawData}
+          selectedStock={selectedStock}
+          setSelectedStock={setSelectedStock}
+          setFavkey={setFavkey}
+        />
+        {/* /keyで渡すとkeyの値が変わるとReactコンポーネントが再描画される */}
+      </Paper>
 
-      <hr style={{ borderTop: "1px solid #ccc" }} />
+      <Divider sx={{ my: 3 }} />
 
-      <Favorite favkey={favkey} />
+      {/* お気に入り */}
+      <Paper sx={{ p: 2, mb: 3 }}>
+        <Favorite favkey={favkey} />
+      </Paper>
 
-      <hr style={{ borderTop: "1px solid #ccc" }} />
+      <Divider sx={{ my: 3 }} />
 
-      <TickerSeach />
-    </div>
+      {/* ティッカー検索 */}
+      <Paper sx={{ p: 2 }}>
+        <TickerSeach />
+      </Paper>
+    </Container>
   );
 }
 

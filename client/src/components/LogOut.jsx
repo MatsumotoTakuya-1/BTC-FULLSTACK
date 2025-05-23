@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { Button } from "@mui/material";
 
 function LogOut() {
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
@@ -15,9 +16,14 @@ function LogOut() {
     }
   };
   return (
-    <div>
-      <button onClick={processingLogout}>Logout</button>
-    </div>
+    <Button
+      onClick={processingLogout}
+      variant="outlined" //contained にすると塗りつぶし
+      color="secondary" //color="secondary" で警告・ログアウトっぽい印象に
+      size="small" //size="small" で控えめサイズ（medium や large も選べる）
+    >
+      Logout
+    </Button>
   );
 }
 

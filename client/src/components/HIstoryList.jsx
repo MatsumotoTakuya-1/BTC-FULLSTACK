@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { fetchHistory, deleteHistory, updatedFavorite } from "../API/stockAPI";
 import { useNavigate } from "react-router";
+import { Typography, Box, IconButton, Checkbox, Button } from "@mui/material";
+
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 function HistoryList(props) {
   const [history, setHistory] = useState([]);
@@ -100,7 +109,7 @@ function HistoryList(props) {
 
   return (
     <div>
-      <h2 style={{ textAlign: "left" }}>検索履歴</h2>
+      <Typography variant="h5">検索履歴</Typography>
       {Object.entries(groupedHistory).map(([symbol, item]) => {
         return (
           <div key={symbol}>
@@ -119,65 +128,73 @@ function HistoryList(props) {
               {item[0].company.name}
             </div>
             {expandSymbols[symbol] && (
-              <table
-                style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  // marginBottom: "1rem",
-                  textAlign: "left",
-                }}
-              >
-                <thead>
-                  <tr>
-                    <th>チェック</th>
-                    <th>銘柄</th>
-                    <th>検索日時</th>
-                    <th>表示期間</th>
-                    <th>モデル</th>
-                    <th>お気に入り登録</th>
-                    <th>削除</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {item.map((item) => (
-                    <tr key={item.id}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          onChange={() => compareSelectedItem(item)}
-                        />
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => {
-                            props.historySelect(item); // グラフへ反映
-                          }}
-                        >
-                          {item.symbol}
-                        </button>
-                      </td>
-                      <td>
-                        {new Date(item.created_at).toLocaleString("ja-JP")}
-                      </td>
-                      <td>{item.range}</td>
-                      <td>{item.model}</td>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={favCheckedItem[item.id]}
-                          onChange={(e) => {
-                            // console.log(e.target.checked);
-                            favoriteSelectedItem(item.id, e.target.checked);
-                          }}
-                        />
-                      </td>
-                      <td>
-                        <button onClick={() => handleDelete(item.id)}>🗑</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="light">チェック</TableCell>
+                      <TableCell align="light">銘柄</TableCell>
+                      <TableCell align="light">検索日時</TableCell>
+                      <TableCell align="light">表示期間</TableCell>
+                      <TableCell align="light">モデル</TableCell>
+                      <TableCell align="light">お気に入り登録</TableCell>
+                      <TableCell align="light">削除</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {item.map((item) => (
+                      <TableRow
+                        key={item.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell align="light">
+                          <input
+                            type="checkbox"
+                            onChange={() => compareSelectedItem(item)}
+                          />
+                        </TableCell>
+                        <TableCell align="light">
+                          <Button
+                            onClick={() => {
+                              props.historySelect(item); // グラフへ反映
+                            }}
+                            variant="text"
+                            color="primary"
+                          >
+                            {item.symbol}
+                          </Button>
+                        </TableCell>
+                        <TableCell align="light">
+                          {new Date(item.created_at).toLocaleString("ja-JP")}
+                        </TableCell>
+                        <TableCell align="light">{item.range}</TableCell>
+                        <TableCell align="light">{item.model}</TableCell>
+                        <TableCell align="light">
+                          <input
+                            type="checkbox"
+                            checked={favCheckedItem[item.id]}
+                            onChange={(e) => {
+                              // console.log(e.target.checked);
+                              favoriteSelectedItem(item.id, e.target.checked);
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell align="light">
+                          <Button
+                            onClick={() => handleDelete(item.id)}
+                            color="primary"
+                            variant="text"
+                          >
+                            🗑
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             )}
           </div>
         );

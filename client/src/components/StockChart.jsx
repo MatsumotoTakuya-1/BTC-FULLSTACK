@@ -8,6 +8,15 @@ import {
   Tooltip,
 } from "recharts";
 
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Divider,
+  Paper,
+} from "@mui/material";
+
 function StockChart({ data }) {
   const {
     actual,
@@ -42,15 +51,28 @@ function StockChart({ data }) {
 
   return (
     <div>
-      {company && (
-        <>
-          <strong>{company.name} </strong>({company.exchange}/{" "}
-          {company.currency})<div>表示/予測範囲：{range}</div>
-          <div>使用モデル：{model}</div>
-          <div>年次平均リターン:{(annualReturn * 100).toFixed(2)}%</div>
-          <div>リスク(年次標準偏差):{(annualResk * 100).toFixed(2)}%</div>
-        </>
-      )}
+      <Paper sx={{ p: 2, mb: 1 }}>
+        {company && (
+          <>
+            <Typography variant="body2" align="center">
+              <strong>{company.name} </strong>({company.exchange}/{" "}
+              {company.currency})
+            </Typography>
+            <Typography variant="body2" align="center">
+              表示/予測範囲：{range}
+            </Typography>
+            <Typography variant="body2" align="center">
+              使用モデル：{model}
+            </Typography>
+            <Typography variant="body2" align="center">
+              年次平均リターン:{(annualReturn * 100).toFixed(2)}%
+            </Typography>
+            <Typography variant="body2" align="center">
+              リスク(年次標準偏差):{(annualResk * 100).toFixed(2)}%
+            </Typography>
+          </>
+        )}
+      </Paper>
       {/* サイズ指定しないとlinechartは描画されない */}
       <ResponsiveContainer width="100%" height={350}>
         <LineChart data={chartData}>

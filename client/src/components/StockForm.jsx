@@ -1,5 +1,13 @@
 import { useState } from "react";
 import { fetchStockPrediction } from "../API/stockAPI";
+import {
+  Box,
+  TextField,
+  Button,
+  MenuItem,
+  Paper,
+  Typography,
+} from "@mui/material";
 
 function StockForm(props) {
   // 銘柄・期間・モデルのステート
@@ -40,50 +48,48 @@ function StockForm(props) {
   };
 
   return (
-    <form
+    <Box
+      component="form"
       onSubmit={submitClick}
-      style={{ display: "flex", alignItems: "center", gap: "1rem" }}
+      display="flex"
+      gap={5}
+      // justifyContent="space-between"
+      flexWrap="wrap"
     >
       {/* 銘柄入力 */}
-      <label>
-        <span style={{ marginRight: "0.5rem" }}>ティッカー :</span>
-        <input
-          type="text"
-          placeholder="例:AAPL"
-          value={symbol}
-          onChange={symbolChange}
-        />
-      </label>
+      <TextField
+        label="ティッカー"
+        placeholder="例: AAPL"
+        value={symbol}
+        onChange={symbolChange}
+        required
+      />
 
       {/* 表示期間選択 */}
-      <label>
-        <span style={{ marginRight: "0.5rem" }}>表示/予測期間 :</span>
-        <select value={range} onChange={rangeChange}>
-          <option value="1w">1週間</option>
-          <option value="1m">1か月</option>
-          <option value="3m">3か月</option>
-          <option value="1y">1年</option>
-          <option value="3y">3年</option>
-          <option value="5y">5年</option>
-          <option value="10y">10年</option>
-          <option value="30y">30年</option>
-        </select>
-      </label>
+      <TextField select label="表示期間" value={range} onChange={rangeChange}>
+        <MenuItem value="1w">1週間</MenuItem>
+        <MenuItem value="1m">1か月</MenuItem>
+        <MenuItem value="3m">3か月</MenuItem>
+        <MenuItem value="1y">1年</MenuItem>
+        <MenuItem value="3y">3年</MenuItem>
+        <MenuItem value="5y">5年</MenuItem>
+        <MenuItem value="10y">10年</MenuItem>
+        <MenuItem value="30y">30年</MenuItem>
+      </TextField>
 
       {/* モデル選択 */}
-      <label>
-        <span style={{ marginRight: "0.5rem" }}>予測モデル :</span>
-        <select value={model} onChange={modelChange}>
-          <option value="model1">モデル1（幾何ブラウン運動）</option>
-          <option value="model2">モデル2（幾何ブラウン運動300回平均）</option>
-          <option value="model3">未実装：モデル3（ML: SVR）</option>
-          <option value="model4">未実装：モデル4（ML: XGBoost）</option>
-        </select>
-      </label>
+      <TextField select label="予測モデル" value={model} onChange={modelChange}>
+        <MenuItem value="model1">モデル1（幾何ブラウン運動）</MenuItem>
+        <MenuItem value="model2">モデル2（300回平均）</MenuItem>
+        <MenuItem value="model3">モデル3（SVR）</MenuItem>
+        <MenuItem value="model4">モデル4（XGBoost）</MenuItem>
+      </TextField>
 
       {/* 送信ボタン */}
-      <button type="submit">検索</button>
-    </form>
+      <Button variant="contained" color="primary" type="submit" size="large">
+        検索
+      </Button>
+    </Box>
   );
 }
 
